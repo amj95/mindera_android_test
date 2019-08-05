@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 
 import androidx.fragment.app.Fragment;
 
+import com.androidtest.minderatest.gallery.domain.model.ImageList;
+
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class GalleryFragment extends Fragment implements GalleryContract.View {
@@ -22,5 +24,20 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
     @Override
     public void setPresenter(GalleryContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
+    }
+
+    @Override
+    public void showLoadingIndicator() {
+
+    }
+
+    @Override
+    public void showImages(ImageList imageList) {
+
+    }
+
+    @Override
+    public void showLoadingError() {
+
     }
 }

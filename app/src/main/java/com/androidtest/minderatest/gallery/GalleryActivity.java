@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.androidtest.minderatest.R;
 import com.androidtest.minderatest.databinding.GalleryActBinding;
-import com.androidtest.minderatest.databinding.MainActBinding;
 import com.androidtest.minderatest.util.ActivityUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
