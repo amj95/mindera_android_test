@@ -10,7 +10,10 @@ import com.androidtest.minderatest.util.ActivityUtils;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GalleryActivity extends AppCompatActivity {
+
     GalleryActBinding binding;
+
+    private GalleryPresenter galleryPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +29,15 @@ public class GalleryActivity extends AppCompatActivity {
                     getSupportFragmentManager(), galleryFragment, R.id.contentFrame);
         }
 
+
         // Create the presenter
-        mTasksPresenter = new TasksPresenter(
-                Injection.provideUseCaseHandler(),
-                tasksFragment,
-                Injection.provideGetTasks(getApplicationContext()),
-                Injection.provideCompleteTasks(getApplicationContext()),
-                Injection.provideActivateTask(getApplicationContext()),
-                Injection.provideClearCompleteTasks(getApplicationContext())
-        );
+//        mTasksPresenter = new TasksPresenter(
+//                Injection.provideUseCaseHandler(),
+//                tasksFragment,
+//                Injection.provideGetTasks(getApplicationContext()),
+//                Injection.provideCompleteTasks(getApplicationContext()),
+//                Injection.provideActivateTask(getApplicationContext()),
+//                Injection.provideClearCompleteTasks(getApplicationContext())
+//        );
     }
 }
