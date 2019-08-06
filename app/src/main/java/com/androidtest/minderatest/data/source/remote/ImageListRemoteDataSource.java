@@ -41,6 +41,7 @@ public class ImageListRemoteDataSource implements ImageDataSource {
 
                 @Override
                 public void onFailure(Call<ImageList> call, Throwable t) {
+                    call.request();
                     callback.onDataNotAvailable();
                 }
             });

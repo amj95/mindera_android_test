@@ -25,10 +25,6 @@ public class GetImageList extends UseCase<GetImageList.RequestValues, GetImageLi
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        if (values.isForceUpdate()) {
-            mImageRepository.refreshImages();
-        }
-
         mImageRepository.getImages(new ImageDataSource.LoadImagesCallback() {
             @Override
             public void onImagesLoaded(ImageList imageList) {
@@ -60,7 +56,6 @@ public class GetImageList extends UseCase<GetImageList.RequestValues, GetImageLi
         public int getPage() {
             return mPage;
         }
-
     }
 
     public static final class ResponseValue implements UseCase.ResponseValue {

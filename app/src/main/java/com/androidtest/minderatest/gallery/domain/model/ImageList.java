@@ -7,16 +7,16 @@ public class ImageList {
 
     @SerializedName("photos")
     @Expose
-    private Photo photos;
+    private Photos photos;
     @SerializedName("stat")
     @Expose
     private String stat;
 
-    public Photo getPhotos() {
+    public Photos getPhotos() {
         return photos;
     }
 
-    public void setPhotos(Photo photos) {
+    public void setPhotos(Photos photos) {
         this.photos = photos;
     }
 

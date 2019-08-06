@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkHelper {
 
-    private static final String BASE_URL = "https://api.flickr.com/services/rest";
+    private static final String BASE_URL = "https://api.flickr.com/";
 
     private static NetworkHelper instance;
     private static Retrofit retrofit;

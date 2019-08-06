@@ -9,8 +9,6 @@ import com.androidtest.minderatest.UseCaseHandler;
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
 import com.androidtest.minderatest.gallery.domain.usecase.GetImageList;
 
-import java.util.List;
-
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class GalleryPresenter implements GalleryContract.Presenter{
@@ -44,7 +42,7 @@ public class GalleryPresenter implements GalleryContract.Presenter{
     @Override
     public void loadImages(boolean forceUpdate) {
         // Simplification for sample: a network reload will be forced on first load.
-        loadTasks(forceUpdate || mFirstLoad, true);
+        loadImages(forceUpdate || mFirstLoad, true);
         mFirstLoad = false;
     }
 
@@ -52,7 +50,7 @@ public class GalleryPresenter implements GalleryContract.Presenter{
      * @param forceUpdate   Pass in true to refresh the data
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
-    private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
+    private void loadImages(boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
             mGalleryView.setLoadingIndicator();
         }
@@ -92,7 +90,7 @@ public class GalleryPresenter implements GalleryContract.Presenter{
     }
 
     private void processImages(ImageList imageList){
-
+        mGalleryView.showImages(imageList);
     }
 
 
