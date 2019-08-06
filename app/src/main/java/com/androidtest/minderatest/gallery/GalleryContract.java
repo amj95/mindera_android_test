@@ -8,7 +8,7 @@ public interface GalleryContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setLoadingIndicator(boolean showLoadingUI);
+        void setLoadingIndicator();
 
         void showImages(ImageList imageList);
 

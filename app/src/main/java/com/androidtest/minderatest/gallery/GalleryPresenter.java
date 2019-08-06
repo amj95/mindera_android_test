@@ -23,7 +23,7 @@ public class GalleryPresenter implements GalleryContract.Presenter{
 
     private int page = 1;
 
-    private boolean isFirstLoad = true;
+    private boolean mFirstLoad = true;
 
     @SuppressLint("RestrictedApi")
     public GalleryPresenter(@NonNull UseCaseHandler useCaseHandler,
@@ -54,10 +54,10 @@ public class GalleryPresenter implements GalleryContract.Presenter{
      */
     private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
-            mGalleryView.setLoadingIndicator(true);
+            mGalleryView.setLoadingIndicator();
         }
 
-        GetImageList.RequestValues requestValue = new GetImageList.RequestValues(forceUpdate);
+        GetImageList.RequestValues requestValue = new GetImageList.RequestValues(forceUpdate, page);
 
         mUseCaseHandler.execute(mGetImageList, requestValue,
                 new UseCase.UseCaseCallback<GetImageList.ResponseValue>() {
@@ -69,25 +69,29 @@ public class GalleryPresenter implements GalleryContract.Presenter{
                             return;
                         }
                         if (showLoadingUI) {
-                            mGalleryView.setLoadingIndicator(false);
+                            mGalleryView.setLoadingIndicator();
                         }
 
-                        processTasks(tasks);
+                        processImages(list);
                     }
 
                     @Override
                     public void onError() {
                         // The view may not be able to handle UI updates anymore
-                        if (!mTasksView.isActive()) {
+                        if (!mGalleryView.isActive()) {
                             return;
                         }
-                        mTasksView.showLoadingTasksError();
+                        mGalleryView.showLoadingError();
                     }
                 });
     }
 
     @Override
     public void loadNextPage() {
+
+    }
+
+    private void processImages(ImageList imageList){
 
     }
 

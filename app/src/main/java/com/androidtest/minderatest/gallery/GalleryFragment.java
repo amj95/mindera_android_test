@@ -1,7 +1,13 @@
 package com.androidtest.minderatest.gallery;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
@@ -20,14 +26,27 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
         return new GalleryFragment();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
     @SuppressLint("RestrictedApi")
     @Override
     public void setPresenter(GalleryContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
+    @Nullable
     @Override
-    public void showLoadingIndicator() {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void setLoadingIndicator() {
 
     }
 
@@ -39,5 +58,10 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
     @Override
     public void showLoadingError() {
 
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
     }
 }
