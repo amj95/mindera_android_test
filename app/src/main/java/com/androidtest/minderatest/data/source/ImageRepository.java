@@ -35,19 +35,19 @@ public class ImageRepository implements ImageDataSource {
 
     // Prevent direct instantiation.
     @SuppressLint("RestrictedApi")
-    private ImageRepository(@NonNull ImageDataSource tasksRemoteDataSource) {
-        mImagesRemoteDataSource = checkNotNull(tasksRemoteDataSource);
+    private ImageRepository(@NonNull ImageDataSource imagesRemoteDataSource) {
+        mImagesRemoteDataSource = checkNotNull(imagesRemoteDataSource);
     }
 
     /**
      * Returns the single instance of this class, creating it if necessary.
      *
-     * @param tasksRemoteDataSource the backend data source
+     * @param imagesRemoteDataSource the backend data source
      * @return the {@link ImageRepository} instance
      */
-    public static ImageRepository getInstance(@NonNull ImageDataSource tasksRemoteDataSource) {
+    public static ImageRepository getInstance(@NonNull ImageDataSource imagesRemoteDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new ImageRepository(tasksRemoteDataSource);
+            INSTANCE = new ImageRepository(imagesRemoteDataSource);
         }
         return INSTANCE;
     }
@@ -61,7 +61,7 @@ public class ImageRepository implements ImageDataSource {
     }
 
     /**
-     * Gets tasks from cache, local data source (SQLite) or remote data source, whichever is
+     * Gets Images from cache, local data source (SQLite) or remote data source, whichever is
      * available first.
      * <p>
      * Note: {@link com.androidtest.minderatest.data.source.ImageDataSource.LoadImagesCallback#onDataNotAvailable()} is fired if all data sources fail to
@@ -78,7 +78,7 @@ public class ImageRepository implements ImageDataSource {
             return;
         }
 
-        getTasksFromRemoteDataSource(callback, page);
+        getImagesFromRemoteDataSource(callback, page);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ImageRepository implements ImageDataSource {
 
     }
 
-    private void getTasksFromRemoteDataSource(@NonNull final LoadImagesCallback callback, final int page) {
+    private void getImagesFromRemoteDataSource(@NonNull final LoadImagesCallback callback, final int page) {
         mImagesRemoteDataSource.getImages(new LoadImagesCallback() {
             @Override
             public void onImagesLoaded(ImageList imageList) {

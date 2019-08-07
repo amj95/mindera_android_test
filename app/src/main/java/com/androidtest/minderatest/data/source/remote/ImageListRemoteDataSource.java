@@ -6,8 +6,6 @@ import com.androidtest.minderatest.data.source.ImageDataSource;
 import com.androidtest.minderatest.data.source.remote.DAO.NetworkHelper;
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
 
-import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

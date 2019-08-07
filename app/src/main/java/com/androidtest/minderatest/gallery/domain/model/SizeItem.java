@@ -3,7 +3,7 @@ package com.androidtest.minderatest.gallery.domain.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ImageItem {
+public class SizeItem {
 
     @SerializedName("sizes")
     @Expose

@@ -1,6 +1,5 @@
 package com.androidtest.minderatest.data.source.remote.DAO;
 
-import com.androidtest.minderatest.data.source.remote.IImageListDAO;
 import com.androidtest.minderatest.exception.ClassNotInitializedException;
 import com.androidtest.minderatest.exception.UnsupportedInitializationException;
 import com.google.gson.FieldNamingPolicy;
@@ -39,15 +38,19 @@ public class NetworkHelper {
                 if (instance == null) instance = new NetworkHelper();
             }
         }
-
         return instance;
     }
 
     public IImageListDAO getImageListDAO() {
         if (instance == null)
             throw new ClassNotInitializedException();
-
         return retrofit.create(IImageListDAO.class);
+    }
+
+    public ISizesDAO getSizesDAO() {
+        if (instance == null)
+            throw new ClassNotInitializedException();
+        return retrofit.create(ISizesDAO.class);
     }
 
 }
