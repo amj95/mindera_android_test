@@ -1,4 +1,4 @@
-package com.androidtest.minderatest.data.source.remote;
+package com.androidtest.minderatest.data.source.remote.DAO;
 
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
 

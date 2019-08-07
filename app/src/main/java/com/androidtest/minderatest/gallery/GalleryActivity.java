@@ -5,9 +5,12 @@ import android.os.Bundle;
 import com.androidtest.minderatest.R;
 import com.androidtest.minderatest.UseCaseHandler;
 import com.androidtest.minderatest.data.source.ImageRepository;
+import com.androidtest.minderatest.data.source.SizesRepository;
 import com.androidtest.minderatest.data.source.remote.ImageListRemoteDataSource;
+import com.androidtest.minderatest.data.source.remote.SizesRemoteDataSource;
 import com.androidtest.minderatest.databinding.GalleryActBinding;
 import com.androidtest.minderatest.gallery.domain.usecase.GetImageList;
+import com.androidtest.minderatest.gallery.domain.usecase.GetSizes;
 import com.androidtest.minderatest.util.ActivityUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,9 +37,8 @@ public class GalleryActivity extends AppCompatActivity {
 
         mGalleryPresenter = new GalleryPresenter(UseCaseHandler.getInstance(),
                 galleryFragment,
-                new GetImageList(
-                        ImageRepository.getInstance(
-                                ImageListRemoteDataSource.getInstance()))
+                new GetImageList(ImageRepository.getInstance(ImageListRemoteDataSource.getInstance())),
+                new GetSizes(SizesRepository.getInstance(SizesRemoteDataSource.getInstance()))
                 );
     }
 }

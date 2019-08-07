@@ -2,44 +2,43 @@ package com.androidtest.minderatest.data.source.remote;
 
 import androidx.annotation.NonNull;
 
-import com.androidtest.minderatest.data.source.ImageDataSource;
-import com.androidtest.minderatest.data.source.SizeDataSource;
+import com.androidtest.minderatest.data.source.SizesDataSource;
 import com.androidtest.minderatest.data.source.remote.DAO.NetworkHelper;
-import com.androidtest.minderatest.gallery.domain.model.ImageList;
+import com.androidtest.minderatest.gallery.domain.model.SizeItem;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SizeRemoteDataSource implements SizeDataSource {
+public class SizesRemoteDataSource implements SizesDataSource {
 
-    private static SizeRemoteDataSource INSTANCE;
+    private static SizesRemoteDataSource INSTANCE;
 
-    public static SizeRemoteDataSource getInstance() {
+    public static SizesRemoteDataSource getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new SizeRemoteDataSource();
+            INSTANCE = new SizesRemoteDataSource();
         }
         return INSTANCE;
     }
 
     // Prevent direct instantiation.
-    private SizeRemoteDataSource() {}
+    private SizesRemoteDataSource() {}
 
     @Override
-    public void getPhoto(@NonNull final LoadImagesCallback callback, int page) {
+    public void getSizes(@NonNull final LoadSizesCallback callback, String id) {
         try {
             NetworkHelper.instance()
-                    .getImageListDAO()
-                    .getImageList(page)
-                    .enqueue(new Callback<ImageList>() {
+                    .getSizesDAO()
+                    .getSizes(id)
+                    .enqueue(new Callback<SizeItem>() {
                         @Override
-                        public void onResponse(Call<ImageList> call, Response<ImageList> response) {
-                            ImageList data = response.body();
-                            callback.onImagesLoaded(data);
+                        public void onResponse(Call<SizeItem> call, Response<SizeItem> response) {
+                            SizeItem sizeItem = response.body();
+                            callback.onSizesLoaded(sizeItem.getSizes());
                         }
 
                         @Override
-                        public void onFailure(Call<ImageList> call, Throwable t) {
+                        public void onFailure(Call<SizeItem> call, Throwable t) {
                             call.request();
                             callback.onDataNotAvailable();
                         }
@@ -48,11 +47,6 @@ public class SizeRemoteDataSource implements SizeDataSource {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void getSizes(@NonNull LoadSizesCallback callback, int id) {
-
     }
 
     @Override

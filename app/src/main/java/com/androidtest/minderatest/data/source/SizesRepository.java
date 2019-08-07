@@ -24,7 +24,7 @@ public class SizesRepository implements SizesDataSource {
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    Map<Integer, Sizes> mCachedSizesList;
+    Map<String, Sizes> mCachedSizesList;
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
@@ -68,7 +68,7 @@ public class SizesRepository implements SizesDataSource {
      */
     @SuppressLint("RestrictedApi")
     @Override
-    public void getSizes(@NonNull LoadSizesCallback callback, int id) {
+    public void getSizes(@NonNull LoadSizesCallback callback, String id) {
         checkNotNull(callback);
 
         // Respond immediately with cache if available and requested size is in cache
@@ -85,7 +85,7 @@ public class SizesRepository implements SizesDataSource {
 
     }
 
-    private void getSizesFromRemoteDataSource(@NonNull final LoadSizesCallback callback, final int id) {
+    private void getSizesFromRemoteDataSource(@NonNull final LoadSizesCallback callback, final String id) {
         mSizesRemoteDataSource.getSizes(new LoadSizesCallback() {
             @Override
             public void onSizesLoaded(Sizes sizes) {
@@ -100,7 +100,7 @@ public class SizesRepository implements SizesDataSource {
         }, id);
     }
 
-    private void refreshCache(int id, Sizes sizes) {
+    private void refreshCache(String id, Sizes sizes) {
         if (mCachedSizesList == null) {
             mCachedSizesList = new LinkedHashMap<>();
         }

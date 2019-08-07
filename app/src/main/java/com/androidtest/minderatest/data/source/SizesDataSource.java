@@ -17,7 +17,7 @@ public interface SizesDataSource {
         void onDataNotAvailable();
     }
 
-    void getSizes(@NonNull LoadSizesCallback callback, int id);
+    void getSizes(@NonNull LoadSizesCallback callback, String id);
 
     void refreshImages();
 }
