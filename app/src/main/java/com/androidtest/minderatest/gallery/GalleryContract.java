@@ -3,16 +3,23 @@ package com.androidtest.minderatest.gallery;
 import com.androidtest.minderatest.BasePresenter;
 import com.androidtest.minderatest.BaseView;
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
+import com.androidtest.minderatest.gallery.domain.model.Picture;
+
+import java.util.List;
 
 public interface GalleryContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setLoadingIndicator(boolean showLoadingUI);
+        void setLoadingIndicator();
 
-        void showImages(ImageList imageList);
+        void showImages(List<Picture> pictureList);
 
         void showLoadingError();
+
+        void showPageLoadingIndicator();
+
+        void showPageLoadingError();
 
         boolean isActive();
     }
@@ -20,6 +27,8 @@ public interface GalleryContract {
     interface Presenter extends BasePresenter {
 
         void loadImages(boolean forceUpdate);
+
+        void loadSize(List<Picture> pictureList);
 
         void loadNextPage();
     }
