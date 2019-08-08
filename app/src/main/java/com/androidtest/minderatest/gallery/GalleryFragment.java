@@ -92,30 +92,38 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
 
     @Override
     public void setLoadingIndicator() {
-
+        binding.tvErrorLoading.setVisibility(View.GONE);
+        binding.rvImages.setVisibility(View.VISIBLE);
+        binding.pbLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showImages(List<Picture> pictureList) {
         mImageAdapter.replaceData(pictureList);
-        if(pictureList.get(pictureList.size() - 1).getSizes() == null){
-            mPresenter.loadSize(pictureList);
-        }
     }
 
     @Override
     public void showLoadingError() {
-
+        binding.tvErrorLoading.setVisibility(View.VISIBLE);
+        binding.rvImages.setVisibility(View.GONE);
+        binding.pbLoading.setVisibility(View.GONE);
     }
 
     @Override
     public void showPageLoadingIndicator() {
-        binding.pbBottomLoading.setVisibility(View.VISIBLE);
+        binding.pbLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showPageLoadingError() {
-        binding.pbBottomLoading.setVisibility(View.INVISIBLE);
+        binding.tvErrorLoading.setVisibility(View.VISIBLE);
+        binding.rvImages.setVisibility(View.GONE);
+        binding.pbLoading.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void removePageLoadingIndicator() {
+        binding.pbLoading.setVisibility(View.GONE);
     }
 
     @Override

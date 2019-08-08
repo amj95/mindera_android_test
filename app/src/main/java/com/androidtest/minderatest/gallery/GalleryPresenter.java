@@ -8,14 +8,11 @@ import com.androidtest.minderatest.UseCase;
 import com.androidtest.minderatest.UseCaseHandler;
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
 import com.androidtest.minderatest.gallery.domain.model.Photo;
-import com.androidtest.minderatest.gallery.domain.model.Photos;
 import com.androidtest.minderatest.gallery.domain.model.Picture;
-import com.androidtest.minderatest.gallery.domain.model.Size;
 import com.androidtest.minderatest.gallery.domain.model.Sizes;
 import com.androidtest.minderatest.gallery.domain.usecase.GetImageList;
 import com.androidtest.minderatest.gallery.domain.usecase.GetSizes;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +31,10 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     private int page = 1;
 
     private boolean mFirstLoad = true;
+
+    private boolean mBlockRequest= false;
+
+    private List<Picture> dataList = new LinkedList<>();
 
     @SuppressLint("RestrictedApi")
     public GalleryPresenter(@NonNull UseCaseHandler useCaseHandler,
@@ -79,7 +80,8 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                                 if (!mGalleryView.isActive()) {
                                     return;
                                 }
-                                mGalleryView.showImages(pictureList);
+
+                                verifySizes();
                             }
 
                             @Override
@@ -120,7 +122,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                         if (showLoadingUI) {
                             mGalleryView.setLoadingIndicator();
                         }
-
+                        mGalleryView.removePageLoadingIndicator();
                         processImages(list);
                     }
 
@@ -144,13 +146,22 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     }
 
     private void processImages(ImageList imageList) {
-        List<Picture> pictureList = new LinkedList<>();
         for (Photo photo : imageList.getPhotos().getPhoto()) {
             Picture picture = new Picture();
             picture.setPhoto(photo);
-            pictureList.add(picture);
+            dataList.add(picture);
         }
-        mGalleryView.showImages(pictureList);
+
+        verifySizes();
+    }
+
+    private void verifySizes(){
+        //iterates till all sizes been loaded
+        if(dataList.get(dataList.size() - 1).getSizes() == null){
+            loadSize(dataList);
+        }else{
+            mGalleryView.showImages(dataList);
+        }
     }
 
 

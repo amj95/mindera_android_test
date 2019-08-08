@@ -21,6 +21,8 @@ public interface GalleryContract {
 
         void showPageLoadingError();
 
+        void removePageLoadingIndicator();
+
         boolean isActive();
     }
 
