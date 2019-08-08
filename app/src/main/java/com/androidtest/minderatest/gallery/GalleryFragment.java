@@ -12,17 +12,19 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.androidtest.minderatest.R;
 import com.androidtest.minderatest.databinding.GalleryFragBinding;
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
 import com.androidtest.minderatest.gallery.domain.model.Photo;
-import com.androidtest.minderatest.gallery.domain.model.Photos;
+import com.androidtest.minderatest.gallery.domain.model.Picture;
 import com.androidtest.minderatest.gallery.lineadapter.ImageLineAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -71,6 +73,8 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
 
         binding.rvImages.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.rvImages.setAdapter(mImageAdapter);
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(binding.rvImages);
 
         binding.rvImages.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -78,8 +82,7 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(getContext(), "Last", Toast.LENGTH_LONG).show();
-
+                    mPresenter.loadNextPage();
                 }
             }
         });
@@ -93,13 +96,26 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
     }
 
     @Override
-    public void showImages(ImageList imageList) {
-        mImageAdapter.replaceData(imageList.getPhotos().getPhoto());
+    public void showImages(List<Picture> pictureList) {
+        mImageAdapter.replaceData(pictureList);
+        if(pictureList.get(pictureList.size() - 1).getSizes() == null){
+            mPresenter.loadSize(pictureList);
+        }
     }
 
     @Override
     public void showLoadingError() {
 
+    }
+
+    @Override
+    public void showPageLoadingIndicator() {
+        binding.pbBottomLoading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPageLoadingError() {
+        binding.pbBottomLoading.setVisibility(View.INVISIBLE);
     }
 
     @Override

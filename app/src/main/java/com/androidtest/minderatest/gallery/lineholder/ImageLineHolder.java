@@ -13,7 +13,7 @@ public class ImageLineHolder extends RecyclerView.ViewHolder {
 
     public TextView tv_title;
 
-    private ImageView iv_image;
+    public ImageView iv_image;
 
     public ImageLineHolder(View itemView) {
         super(itemView);
