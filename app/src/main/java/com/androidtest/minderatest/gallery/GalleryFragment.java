@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.androidtest.minderatest.R;
 import com.androidtest.minderatest.databinding.GalleryFragBinding;
-import com.androidtest.minderatest.gallery.domain.model.ImageList;
 import com.androidtest.minderatest.gallery.domain.model.Photo;
 import com.androidtest.minderatest.gallery.domain.model.Picture;
 import com.androidtest.minderatest.gallery.lineadapter.ImageLineAdapter;
@@ -91,31 +89,54 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
     }
 
     @Override
-    public void setLoadingIndicator() {
+    public void showLoadingIndicator() {
+        binding.tvErrorLoading.setVisibility(View.GONE);
+        binding.rvImages.setVisibility(View.GONE);
+        binding.pbLoading.setVisibility(View.VISIBLE);
+        binding.pbLoadingNextPage.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void removeLoadingIndicator() {
+        binding.tvErrorLoading.setVisibility(View.GONE);
+        binding.rvImages.setVisibility(View.VISIBLE);
+        binding.pbLoading.setVisibility(View.GONE);
     }
 
     @Override
     public void showImages(List<Picture> pictureList) {
         mImageAdapter.replaceData(pictureList);
-        if(pictureList.get(pictureList.size() - 1).getSizes() == null){
-            mPresenter.loadSize(pictureList);
-        }
+        removeLoadingIndicator();
     }
 
     @Override
     public void showLoadingError() {
-
+        binding.tvErrorLoading.setVisibility(View.VISIBLE);
+        binding.rvImages.setVisibility(View.GONE);
+        binding.pbLoading.setVisibility(View.GONE);
     }
 
     @Override
     public void showPageLoadingIndicator() {
-        binding.pbBottomLoading.setVisibility(View.VISIBLE);
+        binding.pbLoadingNextPage.setVisibility(View.VISIBLE);
+        ViewGroup.LayoutParams params = binding.pbLoadingNextPage.getLayoutParams();
+        params.height = 140;
+        binding.pbLoadingNextPage.setLayoutParams(params);
+    }
+
+    @Override
+    public void removePageLoadingIndicator() {
+        binding.pbLoadingNextPage.setVisibility(View.GONE);
+        ViewGroup.LayoutParams params = binding.pbLoadingNextPage.getLayoutParams();
+        params.height = 5;
+        binding.pbLoadingNextPage.setLayoutParams(params);
     }
 
     @Override
     public void showPageLoadingError() {
-        binding.pbBottomLoading.setVisibility(View.INVISIBLE);
+        binding.tvErrorLoading.setVisibility(View.VISIBLE);
+        binding.rvImages.setVisibility(View.GONE);
+        binding.pbLoading.setVisibility(View.GONE);
     }
 
     @Override

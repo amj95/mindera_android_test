@@ -11,13 +11,17 @@ public interface GalleryContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setLoadingIndicator();
+        void showLoadingIndicator();
+
+        void removeLoadingIndicator();
 
         void showImages(List<Picture> pictureList);
 
         void showLoadingError();
 
         void showPageLoadingIndicator();
+
+        void removePageLoadingIndicator();
 
         void showPageLoadingError();
 
@@ -28,7 +32,7 @@ public interface GalleryContract {
 
         void loadImages(boolean forceUpdate);
 
-        void loadSize(List<Picture> pictureList);
+        void loadSize();
 
         void loadNextPage();
     }

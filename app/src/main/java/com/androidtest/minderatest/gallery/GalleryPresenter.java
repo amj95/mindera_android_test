@@ -8,14 +8,11 @@ import com.androidtest.minderatest.UseCase;
 import com.androidtest.minderatest.UseCaseHandler;
 import com.androidtest.minderatest.gallery.domain.model.ImageList;
 import com.androidtest.minderatest.gallery.domain.model.Photo;
-import com.androidtest.minderatest.gallery.domain.model.Photos;
 import com.androidtest.minderatest.gallery.domain.model.Picture;
-import com.androidtest.minderatest.gallery.domain.model.Size;
 import com.androidtest.minderatest.gallery.domain.model.Sizes;
 import com.androidtest.minderatest.gallery.domain.usecase.GetImageList;
 import com.androidtest.minderatest.gallery.domain.usecase.GetSizes;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +31,10 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     private int page = 1;
 
     private boolean mFirstLoad = true;
+
+    private boolean mBlockNewRequest = false;
+
+    private List<Picture> dataList = new LinkedList<>();
 
     @SuppressLint("RestrictedApi")
     public GalleryPresenter(@NonNull UseCaseHandler useCaseHandler,
@@ -55,31 +56,32 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public void loadImages(boolean forceUpdate) {
-        // Simplification for sample: a network reload will be forced on first load.
+        mBlockNewRequest = true;
         loadImages(forceUpdate || mFirstLoad, true);
         mFirstLoad = false;
     }
 
     @Override
-    public void loadSize(final List<Picture> pictureList) {
+    public void loadSize() {
         int i = 0;
-        for (final Picture picture : pictureList) {
-
+        for (final Picture picture : dataList) {
             if (picture.getSizes() == null) {
                 GetSizes.RequestValues requestValue = new GetSizes.RequestValues(picture.getPhoto().getId());
-                final int finalI = i;
+                final int pos = i;
+
                 mUseCaseHandler.execute(mGetSizes, requestValue,
                         new UseCase.UseCaseCallback<GetSizes.ResponseValue>() {
                             @Override
                             public void onSuccess(GetSizes.ResponseValue response) {
                                 Sizes sizes = response.getSizes();
-                                pictureList.get(finalI).setSizes(sizes);
-
+                                dataList.get(pos).setSizes(sizes);
+                                mGalleryView.showImages(dataList.subList(0, pos));
                                 // The view may not be able to handle UI updates anymore
                                 if (!mGalleryView.isActive()) {
                                     return;
                                 }
-                                mGalleryView.showImages(pictureList);
+
+                                loadSizes();
                             }
 
                             @Override
@@ -91,6 +93,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                                 mGalleryView.showLoadingError();
                             }
                         });
+
                 break;
             }
             i++;
@@ -99,11 +102,11 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     /**
      * @param forceUpdate   Pass in true to refresh the data
-     * @param showLoadingUI Pass in true to display a loading icon in the UI
+     * @param showFirstLoadingIndicator Pass in true to display a loading icon in the UI
      */
-    private void loadImages(boolean forceUpdate, final boolean showLoadingUI) {
-        if (showLoadingUI) {
-            mGalleryView.setLoadingIndicator();
+    private void loadImages(boolean forceUpdate, final boolean showFirstLoadingIndicator) {
+        if (showFirstLoadingIndicator) {
+            mGalleryView.showLoadingIndicator();
         }
 
         GetImageList.RequestValues requestValue = new GetImageList.RequestValues(forceUpdate, page);
@@ -117,10 +120,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                         if (!mGalleryView.isActive()) {
                             return;
                         }
-                        if (showLoadingUI) {
-                            mGalleryView.setLoadingIndicator();
-                        }
-
+                        mGalleryView.removePageLoadingIndicator();
                         processImages(list);
                     }
 
@@ -130,6 +130,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                         if (!mGalleryView.isActive()) {
                             return;
                         }
+                        mGalleryView.removeLoadingIndicator();
                         mGalleryView.showLoadingError();
                     }
                 });
@@ -138,19 +139,33 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public void loadNextPage() {
-        mGalleryView.showPageLoadingIndicator();
-        page++;
-        loadImages(true, false);
+        //if an other page is been loaded
+        if (!mBlockNewRequest) {
+            mBlockNewRequest = true;
+            mGalleryView.showPageLoadingIndicator();
+            page++;
+            loadImages(true, false);
+        }
     }
 
     private void processImages(ImageList imageList) {
-        List<Picture> pictureList = new LinkedList<>();
         for (Photo photo : imageList.getPhotos().getPhoto()) {
             Picture picture = new Picture();
             picture.setPhoto(photo);
-            pictureList.add(picture);
+            dataList.add(picture);
         }
-        mGalleryView.showImages(pictureList);
+
+        loadSizes();
+    }
+
+    private void loadSizes() {
+        //iterates till all sizes been loaded
+        if (dataList.get(dataList.size() - 1).getSizes() == null) {
+            loadSize();
+        } else {
+            mGalleryView.showImages(dataList);
+            mBlockNewRequest = false;
+        }
     }
 
 

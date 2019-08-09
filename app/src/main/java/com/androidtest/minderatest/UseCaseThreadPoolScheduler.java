@@ -11,15 +11,14 @@ import java.util.concurrent.TimeUnit;
  * Executes asynchronous tasks using a {@link ThreadPoolExecutor}.
  * <p>
  * See also {@link Executors} for a list of factory methods to create common
- * {@link java.util.concurrent.ExecutorService}s for different scenarios.
  */
 public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
 
     private final Handler mHandler = new Handler();
 
-    public static final int POOL_SIZE = 200;
+    public static final int POOL_SIZE = 20;
 
-    public static final int MAX_POOL_SIZE = 400;
+    public static final int MAX_POOL_SIZE = 40;
 
     public static final int TIMEOUT = 30;
 
