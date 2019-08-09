@@ -32,7 +32,7 @@ public interface GalleryContract {
 
         void loadImages(boolean forceUpdate);
 
-        void loadSize(List<Picture> pictureList);
+        void loadSize();
 
         void loadNextPage();
     }

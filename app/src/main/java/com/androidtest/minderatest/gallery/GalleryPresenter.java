@@ -57,24 +57,24 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     @Override
     public void loadImages(boolean forceUpdate) {
         mBlockNewRequest = true;
-        // Simplification for sample: a network reload will be forced on first load.
         loadImages(forceUpdate || mFirstLoad, true);
         mFirstLoad = false;
     }
 
     @Override
-    public void loadSize(final List<Picture> pictureList) {
+    public void loadSize() {
         int i = 0;
-        for (final Picture picture : pictureList) {
+        for (final Picture picture : dataList) {
             if (picture.getSizes() == null) {
                 GetSizes.RequestValues requestValue = new GetSizes.RequestValues(picture.getPhoto().getId());
                 final int pos = i;
+
                 mUseCaseHandler.execute(mGetSizes, requestValue,
                         new UseCase.UseCaseCallback<GetSizes.ResponseValue>() {
                             @Override
                             public void onSuccess(GetSizes.ResponseValue response) {
                                 Sizes sizes = response.getSizes();
-                                pictureList.get(pos).setSizes(sizes);
+                                dataList.get(pos).setSizes(sizes);
                                 mGalleryView.showImages(dataList.subList(0, pos));
                                 // The view may not be able to handle UI updates anymore
                                 if (!mGalleryView.isActive()) {
@@ -93,6 +93,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                                 mGalleryView.showLoadingError();
                             }
                         });
+
                 break;
             }
             i++;
@@ -101,10 +102,10 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     /**
      * @param forceUpdate   Pass in true to refresh the data
-     * @param showLoadingUI Pass in true to display a loading icon in the UI
+     * @param showFirstLoadingIndicator Pass in true to display a loading icon in the UI
      */
-    private void loadImages(boolean forceUpdate, final boolean showLoadingUI) {
-        if (showLoadingUI) {
+    private void loadImages(boolean forceUpdate, final boolean showFirstLoadingIndicator) {
+        if (showFirstLoadingIndicator) {
             mGalleryView.showLoadingIndicator();
         }
 
@@ -138,6 +139,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public void loadNextPage() {
+        //if an other page is been loaded
         if (!mBlockNewRequest) {
             mBlockNewRequest = true;
             mGalleryView.showPageLoadingIndicator();
@@ -159,7 +161,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     private void loadSizes() {
         //iterates till all sizes been loaded
         if (dataList.get(dataList.size() - 1).getSizes() == null) {
-            loadSize(dataList);
+            loadSize();
         } else {
             mGalleryView.showImages(dataList);
             mBlockNewRequest = false;
