@@ -81,7 +81,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                                     return;
                                 }
 
-                                verifySizes();
+                                loadSizes();
                             }
 
                             @Override
@@ -153,10 +153,10 @@ public class GalleryPresenter implements GalleryContract.Presenter {
             dataList.add(picture);
         }
 
-        verifySizes();
+        loadSizes();
     }
 
-    private void verifySizes() {
+    private void loadSizes() {
         //iterates till all sizes been loaded
         if (dataList.get(dataList.size() - 1).getSizes() == null) {
             loadSize(dataList);

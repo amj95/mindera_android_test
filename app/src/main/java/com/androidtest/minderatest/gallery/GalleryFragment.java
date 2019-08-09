@@ -93,6 +93,7 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
         binding.tvErrorLoading.setVisibility(View.GONE);
         binding.rvImages.setVisibility(View.GONE);
         binding.pbLoading.setVisibility(View.VISIBLE);
+        binding.pbLoadingNextPage.setVisibility(View.GONE);
     }
 
     @Override
@@ -117,6 +118,7 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
 
     @Override
     public void showPageLoadingIndicator() {
+        binding.pbLoadingNextPage.setVisibility(View.VISIBLE);
         ViewGroup.LayoutParams params = binding.pbLoadingNextPage.getLayoutParams();
         params.height = 140;
         binding.pbLoadingNextPage.setLayoutParams(params);
@@ -124,6 +126,7 @@ public class GalleryFragment extends Fragment implements GalleryContract.View {
 
     @Override
     public void removePageLoadingIndicator() {
+        binding.pbLoadingNextPage.setVisibility(View.GONE);
         ViewGroup.LayoutParams params = binding.pbLoadingNextPage.getLayoutParams();
         params.height = 5;
         binding.pbLoadingNextPage.setLayoutParams(params);

@@ -31,4 +31,6 @@ ext {
     picassoVersion = '2.71828'
     retrofitVersion = '2.4.0'
     gsonVersion = '2.8.5'
+    mockitoVersion = '1.10.19'
+    guavaVersion = '18.0'
 }
