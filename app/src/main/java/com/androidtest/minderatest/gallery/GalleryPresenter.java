@@ -32,7 +32,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     private boolean mFirstLoad = true;
 
-    private boolean mBlockRequest= false;
+    private boolean mBlockNewRequest = false;
 
     private List<Picture> dataList = new LinkedList<>();
 
@@ -56,6 +56,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public void loadImages(boolean forceUpdate) {
+        mBlockNewRequest = true;
         // Simplification for sample: a network reload will be forced on first load.
         loadImages(forceUpdate || mFirstLoad, true);
         mFirstLoad = false;
@@ -65,17 +66,16 @@ public class GalleryPresenter implements GalleryContract.Presenter {
     public void loadSize(final List<Picture> pictureList) {
         int i = 0;
         for (final Picture picture : pictureList) {
-
             if (picture.getSizes() == null) {
                 GetSizes.RequestValues requestValue = new GetSizes.RequestValues(picture.getPhoto().getId());
-                final int finalI = i;
+                final int pos = i;
                 mUseCaseHandler.execute(mGetSizes, requestValue,
                         new UseCase.UseCaseCallback<GetSizes.ResponseValue>() {
                             @Override
                             public void onSuccess(GetSizes.ResponseValue response) {
                                 Sizes sizes = response.getSizes();
-                                pictureList.get(finalI).setSizes(sizes);
-
+                                pictureList.get(pos).setSizes(sizes);
+                                mGalleryView.showImages(dataList.subList(0, pos));
                                 // The view may not be able to handle UI updates anymore
                                 if (!mGalleryView.isActive()) {
                                     return;
@@ -105,7 +105,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
      */
     private void loadImages(boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
-            mGalleryView.setLoadingIndicator();
+            mGalleryView.showLoadingIndicator();
         }
 
         GetImageList.RequestValues requestValue = new GetImageList.RequestValues(forceUpdate, page);
@@ -119,9 +119,6 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                         if (!mGalleryView.isActive()) {
                             return;
                         }
-                        if (showLoadingUI) {
-                            mGalleryView.setLoadingIndicator();
-                        }
                         mGalleryView.removePageLoadingIndicator();
                         processImages(list);
                     }
@@ -132,6 +129,7 @@ public class GalleryPresenter implements GalleryContract.Presenter {
                         if (!mGalleryView.isActive()) {
                             return;
                         }
+                        mGalleryView.removeLoadingIndicator();
                         mGalleryView.showLoadingError();
                     }
                 });
@@ -140,9 +138,12 @@ public class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public void loadNextPage() {
-        mGalleryView.showPageLoadingIndicator();
-        page++;
-        loadImages(true, false);
+        if (!mBlockNewRequest) {
+            mBlockNewRequest = true;
+            mGalleryView.showPageLoadingIndicator();
+            page++;
+            loadImages(true, false);
+        }
     }
 
     private void processImages(ImageList imageList) {
@@ -155,12 +156,13 @@ public class GalleryPresenter implements GalleryContract.Presenter {
         verifySizes();
     }
 
-    private void verifySizes(){
+    private void verifySizes() {
         //iterates till all sizes been loaded
-        if(dataList.get(dataList.size() - 1).getSizes() == null){
+        if (dataList.get(dataList.size() - 1).getSizes() == null) {
             loadSize(dataList);
-        }else{
+        } else {
             mGalleryView.showImages(dataList);
+            mBlockNewRequest = false;
         }
     }
 

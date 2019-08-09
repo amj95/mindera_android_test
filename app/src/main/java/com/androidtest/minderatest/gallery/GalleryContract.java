@@ -11,7 +11,9 @@ public interface GalleryContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setLoadingIndicator();
+        void showLoadingIndicator();
+
+        void removeLoadingIndicator();
 
         void showImages(List<Picture> pictureList);
 
@@ -19,9 +21,9 @@ public interface GalleryContract {
 
         void showPageLoadingIndicator();
 
-        void showPageLoadingError();
-
         void removePageLoadingIndicator();
+
+        void showPageLoadingError();
 
         boolean isActive();
     }

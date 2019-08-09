@@ -60,7 +60,7 @@ public class SizesRepository implements SizesDataSource {
     }
 
     /**
-     * Gets tasks from cache, local data source (SQLite) or remote data source, whichever is
+     * Gets sizes from cache, local data source (SQLite) or remote data source, whichever is
      * available first.
      * <p>
      * Note: {@link com.androidtest.minderatest.data.source.SizesDataSource.LoadSizesCallback#onDataNotAvailable()} is fired if all data sources fail to
